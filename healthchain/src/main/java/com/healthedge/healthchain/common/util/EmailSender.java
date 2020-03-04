@@ -13,7 +13,7 @@ import java.util.Map;
 public class EmailSender {
 
 
-    @Value("${notif.endpoint.url}")
+//    @Value("${notif.endpoint.url}")
     private String notificationUrl;
 
     public boolean post(Map<String, Object> payload) {

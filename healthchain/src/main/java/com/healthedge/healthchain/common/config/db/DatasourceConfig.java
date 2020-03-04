@@ -7,32 +7,32 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DatasourceConfig {
 
-    @Value("${spring.datasource.url}")
-    private String datasourceUrl;
-
-    @Value("${spring.datasource.driver-class-name}")
-    private String dbDriverClassName;
-
-    @Value("${spring.datasource.username}")
-    private String dbUsername;
-
-    @Value("${spring.datasource.password}")
-    private String dbPassword;
-
-    @Bean
-    public DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-        dataSource.setDriverClassName(dbDriverClassName);
-        dataSource.setUrl(datasourceUrl);
-        dataSource.setUsername(dbUsername);
-        dataSource.setPassword(dbPassword);
-
-        return dataSource;
-    }
+//    @Value("${spring.datasource.url}")
+//    private String datasourceUrl;
+//
+//    @Value("${spring.datasource.driver-class-name}")
+//    private String dbDriverClassName;
+//
+//    @Value("${spring.datasource.username}")
+//    private String dbUsername;
+//
+//    @Value("${spring.datasource.password}")
+//    private String dbPassword;
+//
+//    @Bean
+//    public DataSource dataSource() {
+//        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//
+//        dataSource.setDriverClassName(dbDriverClassName);
+//        dataSource.setUrl(datasourceUrl);
+//        dataSource.setUsername(dbUsername);
+//        dataSource.setPassword(dbPassword);
+//
+//        return dataSource;
+//    }
 
 
 }
