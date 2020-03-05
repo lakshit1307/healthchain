@@ -4,10 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Null;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,13 +15,14 @@ import javax.persistence.OneToOne;
 public class BenefitPlan {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
+
     private String benefitPlanId;
 
-    private String benefitPlanName;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    private Account account;
-
     private String transactionHash;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Member> member;
 
 }

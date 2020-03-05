@@ -27,7 +27,7 @@ public class ProviderController {
     @ApiOperation(value = "create a benefit plan")
     @PostMapping(value = "/benefitPlan")
     @ResponseBody
-    public ResponseEntity<BaseResponse> createBenefitPlan(@RequestBody BenefitPlanRequest benefitPlan) {
+    public ResponseEntity<BaseResponse> createBenefitPlan(@RequestBody BenefitPlanRequest benefitPlan) throws CipherException, IOException {
         BaseResponse baseResponse = providerService.createBenefitPlan(benefitPlan);
         return new ResponseEntity(baseResponse, HttpStatus.OK);
     }
@@ -43,7 +43,7 @@ public class ProviderController {
     @ApiOperation(value = "update a benefit plan")
     @PutMapping(value = "/benefitPlan")
     @ResponseBody
-    public ResponseEntity<BaseResponse> updateBenefitPlans(@RequestBody BenefitPlanRequest benefitPlanRequest) {
+    public ResponseEntity<BaseResponse> updateBenefitPlans(@RequestBody BenefitPlanRequest benefitPlanRequest) throws CipherException, IOException {
         BaseResponse baseResponse = providerService.createBenefitPlan(benefitPlanRequest);
         return new ResponseEntity(baseResponse, HttpStatus.OK);
     }
@@ -52,8 +52,8 @@ public class ProviderController {
     @GetMapping(value = "/benefitPlan")
     @ResponseBody
     public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws CipherException, IOException, ExecutionException, InterruptedException {
-        providerService.retrieveFromLedger(null, null);
-        providerService.getEthAccounts();
+//        providerService.retrieveFromLedger(null, null);
+//        providerService.getEthAccounts();
         List<BenefitPlanResponse> benefitPlans = providerService.getAllBenefitPlans();
         return new ResponseEntity(benefitPlans, HttpStatus.OK);
     }

@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -20,6 +17,9 @@ public class Member {
 
     String memberName;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    BenefitPlan benefitPlan;
+    @ManyToOne
+    @JoinColumn(name = "benefitId", referencedColumnName = "id")
+    private BenefitPlan benefitPlan;
+
+    String accountId;
 }
