@@ -21,7 +21,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: "org.web3j.solidity"
+//apply plugin: "org.web3j.solidity"
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
