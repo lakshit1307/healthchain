@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.web3j.crypto.CipherException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -48,7 +50,8 @@ public class ProviderController {
     @ApiOperation(value = "get all the benefit plans present in the system")
     @GetMapping(value = "/benefitPlan")
     @ResponseBody
-    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() {
+    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws CipherException, IOException {
+        providerService.retrieveFromLedger(null, null);
         List<BenefitPlanResponse> benefitPlans = providerService.getAllBenefitPlans();
         return new ResponseEntity(benefitPlans, HttpStatus.OK);
     }

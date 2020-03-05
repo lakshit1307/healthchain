@@ -2,6 +2,14 @@ version: '3'
 
 services:
 
+#  db:
+#    image: postgres:11.1
+#    restart: always
+#    environment:
+#      POSTGRES_PASSWORD: root
+#    ports:
+#      - "5432:5432"
+
   db:
     image: postgres:11.1
     restart: always
@@ -9,6 +17,7 @@ services:
       POSTGRES_PASSWORD: root
     ports:
            - "5432:5432"
+
 
 #  web:
 #      build: .
