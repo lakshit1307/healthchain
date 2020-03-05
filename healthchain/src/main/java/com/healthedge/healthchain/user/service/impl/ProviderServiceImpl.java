@@ -47,9 +47,9 @@ public class ProviderServiceImpl {
     public static List<BenefitPlanResponse> createBenefitPlan(String benefitPlanId){
         List<BenefitPlanResponse> benefitPlans= new ArrayList<>();
         BenefitPlanResponse benefitPlan=new BenefitPlanResponse();
-        benefitPlan.setBenefitPlanId(benefitPlanId);
-        benefitPlan.setBenefitPlanName("BENEFIT_PLAN_1");
-        benefitPlan.setBenefitPlanData("The benefit plan data will be shown here");
+//        benefitPlan.setBenefitPlanId("BP_1");
+//        benefitPlan.setBenefitPlanName("BENEFIT_PLAN_1");
+//        benefitPlan.setBenefitPlanData("The benefit plan data will be shown here");
         return benefitPlans;
     }
 }
