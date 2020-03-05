@@ -7,7 +7,6 @@ import com.healthedge.healthchain.user.dto.BenefitPlanRequest;
 import com.healthedge.healthchain.user.dto.BenefitPlanResponse;
 import com.healthedge.healthchain.user.entity.Member;
 import com.healthedge.healthchain.user.service.EthereumService;
-import com.healthedge.healthchain.user.service.IPFSService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +14,16 @@ import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.EthAccounts;
+import org.web3j.tx.ClientTransactionManager;
+import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
-import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProviderServiceImpl {
@@ -38,28 +40,37 @@ public class ProviderServiceImpl {
     @Autowired
     com.healthedge.healthchain.user.service.IPFSService IPFSService;
 
+    public EthAccounts getEthAccounts() throws ExecutionException, InterruptedException {
+        EthAccounts result = new EthAccounts();
+        result = this.web3j.ethAccounts()
+                .sendAsync()
+                .get();
+        return result;
+    }
+
     public String retrieveFromLedger(String contractAddress, String benefitplanId) throws CipherException, IOException {
 
         Credentials credentials = Credentials.create("d75b5fc0e209f93ae344f4393d46fcc642124e9bfac08c6ad279ae99297dfa22");
+        TransactionManager transactionManager=new ClientTransactionManager(web3j, "0xa69cfC11Ca377405Aae5d6db6180decCcda0F070");
         ContractGasProvider contractGasProvider=new ContractGasProvider() {
             @Override
             public BigInteger getGasPrice(String contractFunc) {
-                return BigInteger.valueOf(0);
+                return BigInteger.valueOf(1);
             }
 
             @Override
             public BigInteger getGasPrice() {
-                return BigInteger.valueOf(0);
+                return BigInteger.valueOf(1);
             }
 
             @Override
             public BigInteger getGasLimit(String contractFunc) {
-                return BigInteger.valueOf(48000000);
+                return BigInteger.valueOf(999999);
             }
 
             @Override
             public BigInteger getGasLimit() {
-                return BigInteger.valueOf(48000000);
+                return BigInteger.valueOf(999999);
             }
         };
         String ipfsHash = null;
@@ -67,8 +78,8 @@ public class ProviderServiceImpl {
                 credentials, contractGasProvider);
 
         try {
-
-            benefitPlanContract.setBenefitPlan("123", "kuch bhi string pass kar do").send();
+            benefitPlanContract.getContractAddress();
+            benefitPlanContract.setBenefitPlan("123", "kuch").send();
             ipfsHash = benefitPlanContract.getBenefitPlan("123").send();
 
             LOGGER.info("ipfs hash from blockchain:" + ipfsHash);

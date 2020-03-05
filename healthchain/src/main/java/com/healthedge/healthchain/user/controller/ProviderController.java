@@ -14,6 +14,7 @@ import org.web3j.crypto.CipherException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping(value = "v1.0/provider")
@@ -50,8 +51,9 @@ public class ProviderController {
     @ApiOperation(value = "get all the benefit plans present in the system")
     @GetMapping(value = "/benefitPlan")
     @ResponseBody
-    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws CipherException, IOException {
+    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws CipherException, IOException, ExecutionException, InterruptedException {
         providerService.retrieveFromLedger(null, null);
+        providerService.getEthAccounts();
         List<BenefitPlanResponse> benefitPlans = providerService.getAllBenefitPlans();
         return new ResponseEntity(benefitPlans, HttpStatus.OK);
     }
