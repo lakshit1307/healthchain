@@ -21,7 +21,7 @@ public class MemberController {
     private MemberServiceImpl memberService;
 
     @ApiOperation(value = "get a the benefit plan")
-    @GetMapping(value = "/member/{memberId}")
+    @GetMapping(value = "/{memberId}")
     @ResponseBody
     public ResponseEntity<List<BenefitPlanResponse>> getBenifitPlansForMember(String memberId) {
         List<BenefitPlanResponse> benefitPlans = memberService.getBenefitPlansForMember(memberId);
