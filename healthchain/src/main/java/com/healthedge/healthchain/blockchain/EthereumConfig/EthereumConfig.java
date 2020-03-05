@@ -34,26 +34,6 @@ public class EthereumConfig {
 
     }
 
-    public Credentials getCredentials() throws IOException, CipherException {
-        Credentials credentials = null;
-        try {
-            credentials = WalletUtils.loadCredentials("",
-                    "/home/ubuntu/payal/arbour/springboot/projectcode/UTC--2019-04-25T07-40-19.131608579Z--1589525e9c86049f287999523a11e4dc3a77f15a");
-            LOGGER.info("credentials: " + credentials);
-        } catch (Exception e) {
-            LOGGER.error("failure", e);
-        }
-        return credentials;
-    }
 
-    public BigInteger getGasPrice() {
-        BigInteger gasprice = BigInteger.valueOf(4700000);
-        return gasprice;
-    }
-
-    public BigInteger getGasLimit() {
-        BigInteger gaslimit = BigInteger.valueOf(4700000);
-        return gaslimit;
-    }
 
 }
