@@ -1,6 +1,6 @@
 package com.healthedge.healthchain.user.controller;
 
-import com.healthedge.healthchain.user.entity.BenefitPlan;
+import com.healthedge.healthchain.user.dto.BenefitPlanResponse;
 import com.healthedge.healthchain.user.service.impl.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,8 @@ public class MemberController {
     @Autowired
     private MemberServiceImpl memberService;
 
-
-    public ResponseEntity<List<BenefitPlan>> getBenifitPlansForMember(String memberId) {
-        List<BenefitPlan> benefitPlans = memberService.getBenifitPlansForMember(memberId);
+    public ResponseEntity<List<BenefitPlanResponse>> getBenifitPlansForMember(String memberId) {
+        List<BenefitPlanResponse> benefitPlans = memberService.getBenefitPlansForMember(memberId);
         return new ResponseEntity(benefitPlans, HttpStatus.OK);
     }
 }

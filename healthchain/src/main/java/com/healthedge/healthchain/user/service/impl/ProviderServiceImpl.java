@@ -3,7 +3,7 @@ package com.healthedge.healthchain.user.service.impl;
 import com.healthedge.healthchain.common.util.Constants;
 import com.healthedge.healthchain.user.dto.BaseResponse;
 import com.healthedge.healthchain.user.dto.BenefitPlanRequest;
-import com.healthedge.healthchain.user.entity.BenefitPlan;
+import com.healthedge.healthchain.user.dto.BenefitPlanResponse;
 import com.healthedge.healthchain.user.entity.Member;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +23,6 @@ public class ProviderServiceImpl {
 
     public BaseResponse updateBenefitPlan(BenefitPlanRequest benefitPlan){
         //TODO update a benefit plan
-
-
         BaseResponse baseResponse=new BaseResponse(Constants.SUCCESS, "Benefit Plan successfully updated");
         return baseResponse;
     }
@@ -35,15 +33,23 @@ public class ProviderServiceImpl {
         return baseResponse;
     }
 
-    public List<BenefitPlan> getAllBenefitPlans(){
+    public List<BenefitPlanResponse> getAllBenefitPlans(){
         //TODO
-        List<BenefitPlan> benefitPlans= new ArrayList<>();
-        return benefitPlans;
+        return createBenefitPlan("BP_1");
     }
 
-    public List<BenefitPlan> getBenefitPlanHistory(String benefitPlanId){
+    public List<BenefitPlanResponse> getBenefitPlanHistory(String benefitPlanId){
         //TODO
-        List<BenefitPlan> benefitPlans= new ArrayList<>();
+        return createBenefitPlan("BP_1");
+
+    }
+
+    public static List<BenefitPlanResponse> createBenefitPlan(String benefitPlanId){
+        List<BenefitPlanResponse> benefitPlans= new ArrayList<>();
+        BenefitPlanResponse benefitPlan=new BenefitPlanResponse();
+        benefitPlan.setBenefitPlanId(benefitPlanId);
+        benefitPlan.setBenefitPlanName("BENEFIT_PLAN_1");
+        benefitPlan.setBenefitPlanData("The benefit plan data will be shown here");
         return benefitPlans;
     }
 }

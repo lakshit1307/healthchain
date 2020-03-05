@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "M_ROLE")
 public class Role {

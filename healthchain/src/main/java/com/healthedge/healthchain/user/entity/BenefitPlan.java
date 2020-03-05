@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter
@@ -14,10 +16,11 @@ import javax.persistence.Id;
 public class BenefitPlan {
 
     @Id
-    private String benefitPlan;
+    private String benefitPlanId;
 
     private String benefitPlanName;
 
+    @OneToOne(fetch = FetchType.EAGER)
     private Account account;
 
     private String transactionHash;
