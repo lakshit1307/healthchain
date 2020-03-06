@@ -45,6 +45,7 @@ public class ProviderController {
     @ResponseBody
     public ResponseEntity<BaseResponse> updateBenefitPlans(@RequestBody BenefitPlanRequest benefitPlanRequest) throws CipherException, IOException {
         BaseResponse baseResponse = providerService.createBenefitPlan(benefitPlanRequest);
+        baseResponse.setStatus("Benefit Plan successfully updated");
         return new ResponseEntity(baseResponse, HttpStatus.OK);
     }
 

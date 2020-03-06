@@ -7,9 +7,7 @@ import com.healthedge.healthchain.user.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MemberServiceImpl {
@@ -25,7 +23,7 @@ public class MemberServiceImpl {
 
 
     public List<BenefitPlanResponse> getBenefitPlansForMember(String memberId) throws Exception {
-      Member member=memberRepository.getOne(memberId);
+      Member member=memberRepository.getMember(memberId).get(0);
       return providerService.getBenefitPlanHistory(member.getBenefitPlanId());
     }
 

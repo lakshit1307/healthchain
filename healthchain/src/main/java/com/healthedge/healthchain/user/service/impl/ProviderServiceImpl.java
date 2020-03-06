@@ -31,11 +31,11 @@ public class ProviderServiceImpl {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ProviderServiceImpl.class);
 
-//    @Value(value = "${contractAddress}")
-    private String contractAddress="0x8c4171A1495d5Cf048E864e006EaE770c129A31d";
+    //    @Value(value = "${contractAddress}")
+    private String contractAddress = "0x8c4171A1495d5Cf048E864e006EaE770c129A31d";
 
-//    @Value(value = "${privateKey}")
-    private String privateKey="d75b5fc0e209f93ae344f4393d46fcc642124e9bfac08c6ad279ae99297dfa22";
+    //    @Value(value = "${privateKey}")
+    private String privateKey = "d75b5fc0e209f93ae344f4393d46fcc642124e9bfac08c6ad279ae99297dfa22";
 
     @Autowired
     private Web3j web3j;
@@ -75,7 +75,7 @@ public class ProviderServiceImpl {
             benefitPlan.setTransactionHash(transactionReceipt.getTransactionHash());
             benefitPlan.setBenefitPlanId(benefitplanId);
             benfitPlanRepository.save(benefitPlan);
-            return Constants.SUCCESS;
+            return transactionReceipt.getTransactionHash();
         } catch (Exception e) { // TODO Auto-generated catch block
             LOGGER.error("Error ", e);
             return Constants.FAILED;
@@ -85,8 +85,8 @@ public class ProviderServiceImpl {
 
 
     public BaseResponse createBenefitPlan(BenefitPlanRequest benefitPlan) throws CipherException, IOException {
-        retrieveFromLedger(benefitPlan.getId(), benefitPlan.getBenefitPlanPayload());
-        BaseResponse baseResponse = new BaseResponse(Constants.SUCCESS, "Benefit Plan successfully created");
+        String hash = retrieveFromLedger(benefitPlan.getId(), benefitPlan.getBenefitPlanPayload());
+        BaseResponse baseResponse = new BaseResponse("Benefit Plan successfully created", hash);
         return baseResponse;
     }
 
@@ -102,7 +102,7 @@ public class ProviderServiceImpl {
 //        EthAccounts accounts = etheriumService.getEthAccounts();
 //        accounts.getAccounts();
 
-        memberRepository.save(member);
+        member = memberRepository.save(member);
 
         //assign benefit plan to member in blockchain
         Credentials credentials = etheriumService.getCredentials(privateKey);
@@ -111,7 +111,7 @@ public class ProviderServiceImpl {
         TransactionReceipt transactionReceipt = benefitPlanContract.assignMemberToBenefitPlan(member.getMemberId(), member.getBenefitPlanId()).send();
         LOGGER.info("Transaction hash from blockchain: " + transactionReceipt.getTransactionHash());
 
-        BaseResponse baseResponse = new BaseResponse(Constants.SUCCESS, "Member successfully created");
+        BaseResponse baseResponse = new BaseResponse("Member successfully created with id: " + member.getMemberId() , transactionReceipt.getTransactionHash());
         return baseResponse;
     }
 
