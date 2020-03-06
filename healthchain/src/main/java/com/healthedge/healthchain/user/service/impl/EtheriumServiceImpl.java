@@ -43,21 +43,4 @@ public class EtheriumServiceImpl {
         return result;
     }
 
-    public TransactionReceipt getTransactionFromHash(String txHash) throws IOException {
-        Optional<TransactionReceipt> transactionReceipt =
-                web3j.ethGetTransactionReceipt(txHash).send().getTransactionReceipt();
-        return transactionReceipt.get();
-    }
-
-    public String retrieveFromLedger(String benefitplanId) throws Exception {
-        Credentials credentials = getCredentials("d75b5fc0e209f93ae344f4393d46fcc642124e9bfac08c6ad279ae99297dfa22");
-        BenefitPlan benefitPlanContract = loadBenefitPlan(credentials, contractGasProvider, "0x0DBfC267C7EaE2d85C4760De7B6C076769f39376");
-        String benefitPlanHash = benefitPlanContract.
-                getBenefitPlan(benefitplanId).send();
-        return benefitPlanHash;
-
-
-    }
-
-
 }

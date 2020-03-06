@@ -99,9 +99,8 @@ public class ProviderServiceImpl {
 
     public BaseResponse createMember(Member member) throws Exception {
         //create member in db
-//        LOGGER.info("acc :" + );
-        EthAccounts accounts = etheriumService.getEthAccounts();
-        accounts.getAccounts();
+//        EthAccounts accounts = etheriumService.getEthAccounts();
+//        accounts.getAccounts();
 
         memberRepository.save(member);
 
@@ -125,9 +124,8 @@ public class ProviderServiceImpl {
             BenefitPlanResponse response = new BenefitPlanResponse();
             response.setBenefitPlanId(plan.getBenefitPlanId());
             response.setTransactionHash(plan.getTransactionHash());
-            response.setBenefitPlanPayload(ipfsService.getData(etheriumService.retrieveFromLedger(plan.getBenefitPlanId())).toString());
-//           Member member= memberRepository.findByBenefitPlanId(plan.getBenefitPlanId());
-//            response.setMemberId(member.getMemberId());
+            String benefitPlanDeEnc = new String(getBenefitPlanDetailsFromIFPShash(plan.getBenefitPlanId())).trim();
+            response.setBenefitPlanPayload(benefitPlanDeEnc);
             responselist.add(response);
         }
         return responselist;
@@ -141,15 +139,12 @@ public class ProviderServiceImpl {
         for (com.healthedge.healthchain.user.entity.BenefitPlan plan : plans) {
             BenefitPlanResponse benefitPlanResponse = new BenefitPlanResponse();
             benefitPlanResponse.setBenefitPlanId(plan.getBenefitPlanId());
-//            etheriumService.getTransactionFromHash(plan.getTransactionHash());
             benefitPlanResponse.setTransactionHash(plan.getTransactionHash());
             String benefitPlanDeEnc = new String(getBenefitPlanDetailsFromIFPShash(benefitPlanId)).trim();
             benefitPlanResponse.setBenefitPlanPayload(benefitPlanDeEnc);
             benefitPlanResponses.add(benefitPlanResponse);
         }
-
         return benefitPlanResponses;
-
     }
 
     public byte[] getBenefitPlanDetailsFromIFPShash(String benefitPlanid) throws Exception {
