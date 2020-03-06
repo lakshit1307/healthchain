@@ -27,7 +27,8 @@ public class EtheriumServiceImpl {
         return benefitPlanContract;
     }
 
-    public EthAccounts getEthAccounts() throws ExecutionException, InterruptedException {
+
+    public EthAccounts getEthAccounts(int i) throws ExecutionException, InterruptedException {
         EthAccounts result = new EthAccounts();
         result = this.web3j.ethAccounts()
                 .sendAsync()

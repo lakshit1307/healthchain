@@ -11,7 +11,10 @@ public class BenefitPlanResponse {
 
     private String benefitPlanId;
 
-    private String benefitPlanName;
-
     private String benefitPlanData;
+
+    private String memberId;
+
+    public BenefitPlanResponse(String success, String member_successfully_created) {
+    }
 }

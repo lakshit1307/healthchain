@@ -35,7 +35,7 @@ public class ProviderController {
     @ApiOperation(value = "create a member")
     @PostMapping(value = "/member")
     @ResponseBody
-    public ResponseEntity<BaseResponse> createMember(@RequestBody Member member) {
+    public ResponseEntity<BaseResponse> createMember(@RequestBody Member member) throws Exception {
         BaseResponse baseResponse = providerService.createMember(member);
         return new ResponseEntity(baseResponse, HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class ProviderController {
     @ApiOperation(value = "get a the benefit plan")
     @GetMapping(value = "/benefitPlan/{benefitPlanId}")
     @ResponseBody
-    public ResponseEntity<List<BenefitPlanResponse>> getBenefitPlanHistory(@PathVariable("benefitPlanId") String benefitPlanId) {
+    public ResponseEntity<List<BenefitPlanResponse>> getBenefitPlanHistory(@PathVariable("benefitPlanId") String benefitPlanId) throws Exception {
         List<BenefitPlanResponse> benefitPlans = providerService.getBenefitPlanHistory(benefitPlanId);
         return new ResponseEntity(benefitPlans, HttpStatus.OK);
     }

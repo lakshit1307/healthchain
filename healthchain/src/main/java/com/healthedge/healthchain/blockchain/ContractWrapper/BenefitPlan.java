@@ -71,6 +71,10 @@ public class BenefitPlan extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
+    protected BenefitPlan(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
+        super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
+    }
+
     public List<BenefitPlanUpdatedEventResponse> getBenefitPlanUpdatedEvents(TransactionReceipt transactionReceipt) {
         List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(BENEFITPLANUPDATED_EVENT, transactionReceipt);
         ArrayList<BenefitPlanUpdatedEventResponse> responses = new ArrayList<BenefitPlanUpdatedEventResponse>(valueList.size());
