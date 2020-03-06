@@ -10,12 +10,12 @@ public class ContractGasProviderImpl implements ContractGasProvider {
 
     @Override
     public BigInteger getGasPrice(String contractFunc) {
-        return BigInteger.valueOf(1);
+        return BigInteger.valueOf(0);
     }
 
     @Override
     public BigInteger getGasPrice() {
-        return BigInteger.valueOf(1);
+        return BigInteger.valueOf(0);
     }
 
     @Override

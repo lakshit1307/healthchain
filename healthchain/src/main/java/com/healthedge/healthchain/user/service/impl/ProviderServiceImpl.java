@@ -17,10 +17,12 @@ import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,11 +31,11 @@ public class ProviderServiceImpl {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ProviderServiceImpl.class);
 
-    @Value(value = "${contractAddress}")
-    private String contractAddress;
+//    @Value(value = "${contractAddress}")
+    private String contractAddress="0x8c4171A1495d5Cf048E864e006EaE770c129A31d";
 
-    @Value(value = "${privateKey}")
-    private String privateKey;
+//    @Value(value = "${privateKey}")
+    private String privateKey="d75b5fc0e209f93ae344f4393d46fcc642124e9bfac08c6ad279ae99297dfa22";
 
     @Autowired
     private Web3j web3j;
@@ -54,7 +56,6 @@ public class ProviderServiceImpl {
     IPFSService ipfsService;
 
 
-
     public String retrieveFromLedger(String benefitplanId
             , String benefitPlanPayload) throws CipherException, IOException {
 
@@ -62,10 +63,11 @@ public class ProviderServiceImpl {
         ipfsHash = ipfsService.addFileToIPFS(ipfsService.prepareForIPFSInjestion(benefitPlanPayload));
         LOGGER.info("ipfs hash from blockchain:" + ipfsHash);
         try {
-            Credentials credentials = etheriumService.getCredentials("d58611e08837b5802516e8d447becf73c40a8dcc157cab000661cd5a9053663e");
+            Credentials credentials = etheriumService.getCredentials(privateKey);
 
-            BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, "0x0DBfC267C7EaE2d85C4760De7B6C076769f39376");
-            TransactionReceipt transactionReceipt = benefitPlanContract.setBenefitPlan(benefitplanId, ipfsHash).send();
+            BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, contractAddress);
+            TransactionReceipt transactionReceipt = benefitPlanContract.
+                    setBenefitPlan(benefitplanId, ipfsHash).send();
 
             LOGGER.info("Transaction hash from blockchain: " + transactionReceipt.getTransactionHash());
             com.healthedge.healthchain.user.entity.BenefitPlan benefitPlan =
@@ -97,13 +99,16 @@ public class ProviderServiceImpl {
 
     public BaseResponse createMember(Member member) throws Exception {
         //create member in db
-        LOGGER.info("acc :" + etheriumService.getEthAccounts(1).toString());
+//        LOGGER.info("acc :" + );
+        EthAccounts accounts = etheriumService.getEthAccounts();
+        accounts.getAccounts();
+
         memberRepository.save(member);
 
         //assign benefit plan to member in blockchain
-        Credentials credentials = etheriumService.getCredentials("d58611e08837b5802516e8d447becf73c40a8dcc157cab000661cd5a9053663e");
+        Credentials credentials = etheriumService.getCredentials(privateKey);
 
-        BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, "0x0DBfC267C7EaE2d85C4760De7B6C076769f39376");
+        BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, contractAddress);
         TransactionReceipt transactionReceipt = benefitPlanContract.assignMemberToBenefitPlan(member.getMemberId(), member.getBenefitPlanId()).send();
         LOGGER.info("Transaction hash from blockchain: " + transactionReceipt.getTransactionHash());
 
@@ -111,15 +116,18 @@ public class ProviderServiceImpl {
         return baseResponse;
     }
 
-    public List<BenefitPlanResponse> getAllBenefitPlans() {
+    public List<BenefitPlanResponse> getAllBenefitPlans() throws Exception {
 
-      List<com.healthedge.healthchain.user.entity.BenefitPlan>   list =benfitPlanRepository.findAll();
-      List<BenefitPlanResponse> responselist = new ArrayList<>();
-        for (com.healthedge.healthchain.user.entity.BenefitPlan plan:list) {
-            BenefitPlanResponse response=new BenefitPlanResponse();
+        List<com.healthedge.healthchain.user.entity.BenefitPlan> list = benfitPlanRepository.findAll();
+        List<BenefitPlanResponse> responselist = new ArrayList<>();
+
+        for (com.healthedge.healthchain.user.entity.BenefitPlan plan : list) {
+            BenefitPlanResponse response = new BenefitPlanResponse();
             response.setBenefitPlanId(plan.getBenefitPlanId());
-           Member member= memberRepository.findByBenefitPlanId(plan.getBenefitPlanId());
-            response.setMemberId(member.getMemberId());
+            response.setTransactionHash(plan.getTransactionHash());
+            response.setBenefitPlanPayload(ipfsService.getData(etheriumService.retrieveFromLedger(plan.getBenefitPlanId())).toString());
+//           Member member= memberRepository.findByBenefitPlanId(plan.getBenefitPlanId());
+//            response.setMemberId(member.getMemberId());
             responselist.add(response);
         }
         return responselist;
@@ -127,52 +135,32 @@ public class ProviderServiceImpl {
 
     public List<BenefitPlanResponse> getBenefitPlanHistory(String benefitPlanId) throws Exception {
 
-        List<com.healthedge.healthchain.user.entity.BenefitPlan> plans =benfitPlanRepository.findByBenefitPlanId(benefitPlanId);
-        List<Integer> idList= new ArrayList<>();
+        List<com.healthedge.healthchain.user.entity.BenefitPlan> plans = benfitPlanRepository.getBenefitPlanByIdSortedReverse(benefitPlanId);
+        List<BenefitPlanResponse> benefitPlanResponses = new ArrayList<>();
 
-        for (com.healthedge.healthchain.user.entity.BenefitPlan plan :plans) {
-            idList.add(Integer.parseInt(plan.getId()));
+        for (com.healthedge.healthchain.user.entity.BenefitPlan plan : plans) {
+            BenefitPlanResponse benefitPlanResponse = new BenefitPlanResponse();
+            benefitPlanResponse.setBenefitPlanId(plan.getBenefitPlanId());
+//            etheriumService.getTransactionFromHash(plan.getTransactionHash());
+            benefitPlanResponse.setTransactionHash(plan.getTransactionHash());
+            String benefitPlanDeEnc = new String(getBenefitPlanDetailsFromIFPShash(benefitPlanId)).trim();
+            benefitPlanResponse.setBenefitPlanPayload(benefitPlanDeEnc);
+            benefitPlanResponses.add(benefitPlanResponse);
         }
-        Collections.sort(idList, Collections.reverseOrder());
 
-        //first record will be the latest
-        LOGGER.info("sorted id's:"+idList);
-        //hit blockchain to get the IPFS hash
-        //hit IPFS to get the payload
-      List<BenefitPlan> BPlist= new ArrayList<>();
-     // getBenefitPlanDetailsFromIFPShash(benefitplanid);
-
-
-
-
-
-        return createBenefitPlan("BP_1");
+        return benefitPlanResponses;
 
     }
 
     public byte[] getBenefitPlanDetailsFromIFPShash(String benefitPlanid) throws Exception {
-        String ipfsHash=null;
-      //hit blockchain and get ipfs hash
-        Credentials credentials = etheriumService.getCredentials("d58611e08837b5802516e8d447becf73c40a8dcc157cab000661cd5a9053663e");
+        String ipfsHash = null;
+        //hit blockchain and get ipfs hash
+        Credentials credentials = etheriumService.getCredentials(privateKey);
 
-        BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, "0x0DBfC267C7EaE2d85C4760De7B6C076769f39376");
+        BenefitPlan benefitPlanContract = etheriumService.loadBenefitPlan(credentials, contractGasProvider, contractAddress);
         ipfsHash = benefitPlanContract.getBenefitPlan(benefitPlanid).send();
         LOGGER.info("IPFS hash from blockchain: " + ipfsHash);
-      byte[] payload=  ipfsService.getData(ipfsHash);
-      return payload;
-
+        byte[] payload = ipfsService.getData(ipfsHash);
+        return payload;
     }
-
-
-    public static List<BenefitPlanResponse> createBenefitPlan(String benefitPlanId) {
-        List<BenefitPlanResponse> benefitPlans = new ArrayList<>();
-        BenefitPlanResponse benefitPlan = new BenefitPlanResponse();
-//        benefitPlan.setBenefitPlanId("BP_1");
-//        benefitPlan.setBenefitPlanName("BENEFIT_PLAN_1");
-//        benefitPlan.setBenefitPlanData("The benefit plan data will be shown here");
-        return benefitPlans;
-    }
-
-
-
 }

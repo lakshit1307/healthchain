@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String memberId;
 
     String memberName;

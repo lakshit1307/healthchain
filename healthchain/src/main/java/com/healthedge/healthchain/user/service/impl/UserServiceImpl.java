@@ -5,7 +5,9 @@ import com.healthedge.healthchain.user.Repository.UserRepository;
 import com.healthedge.healthchain.user.dto.BaseResponse;
 import com.healthedge.healthchain.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl {
 
   @Autowired

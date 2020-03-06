@@ -51,7 +51,7 @@ public class ProviderController {
     @ApiOperation(value = "get all the benefit plans present in the system")
     @GetMapping(value = "/benefitPlan")
     @ResponseBody
-    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws CipherException, IOException, ExecutionException, InterruptedException {
+    public ResponseEntity<List<BenefitPlanResponse>> getAllBenefitPlansForProvider() throws Exception {
 //        providerService.retrieveFromLedger(null, null);
 //        providerService.getEthAccounts();
         List<BenefitPlanResponse> benefitPlans = providerService.getAllBenefitPlans();
